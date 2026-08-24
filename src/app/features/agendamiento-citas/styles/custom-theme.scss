@@ -1,0 +1,48 @@
+// ============================================================
+// PALETA DE COLORES DEL SISTEMA — REEMPLAZAR
+// Sustituir estos valores con los colores del manual de marca.
+// Se dejan en tonos de gris neutro a propósito, para que sea
+// evidente qué variables faltan por definir. NO tienen ningún
+// significado de marca: son solo placeholders funcionales.
+// ============================================================
+$color-primary: #52525b; // Color primario de marca (botones principales, elementos activos)
+$color-secondary: #a1a1aa; // Color secundario de marca (elementos de apoyo)
+$color-accent: #3f3f46; // Color de acento / CTA (llamadas a la acción destacadas)
+$color-success: #52525b; // Estados "Asignada" / confirmación — reemplazar por verde de marca si aplica
+$color-warn: #3f3f46; // Errores y advertencias — reemplazar por rojo/naranja de marca
+$color-surface: #fafafa; // Fondo de tarjetas y pasos del wizard
+$color-text-primary: #18181b; // Texto principal sobre superficie
+$color-text-secondary: #52525b; // Texto secundario / descripciones
+
+// Colores "on-*" (texto/íconos que van SOBRE los colores de arriba).
+// También son placeholders: ajustar junto con los colores de marca
+// para mantener un contraste mínimo de 4.5:1 (WCAG AA).
+$color-on-primary: #ffffff;
+$color-on-secondary: #18181b;
+$color-on-accent: #ffffff;
+$color-on-warn: #ffffff;
+
+@use '@angular/material' as mat;
+
+// Aplica los placeholders anteriores sobre los tokens de sistema (M3) que
+// consumen todos los componentes de Angular Material (botones, stepper,
+// radio, select, datepicker, etc.). Al reemplazar las variables de arriba
+// por la paleta real de marca, el tema se actualiza en toda la aplicación
+// sin tocar el resto del código.
+@mixin aplicar-tema-placeholder() {
+  @include mat.theme-overrides(
+    (
+      primary: $color-primary,
+      on-primary: $color-on-primary,
+      secondary: $color-secondary,
+      on-secondary: $color-on-secondary,
+      tertiary: $color-accent,
+      on-tertiary: $color-on-accent,
+      error: $color-warn,
+      on-error: $color-on-warn,
+      surface: $color-surface,
+      on-surface: $color-text-primary,
+      on-surface-variant: $color-text-secondary,
+    )
+  );
+}

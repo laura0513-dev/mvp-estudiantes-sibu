@@ -1,0 +1,73 @@
+<main class="agendamiento-contenedor">
+  <h1>Agendar cita con trabajador social</h1>
+  <p class="agendamiento-intro">
+    Completa los siguientes pasos para agendar tu cita. Puedes navegar entre los pasos con el
+    teclado (Tab, flechas, Enter o Espacio) y regresar a un paso anterior en cualquier momento sin
+    perder la información ya ingresada.
+  </p>
+
+  <mat-stepper
+    linear
+    #stepper
+    orientation="horizontal"
+    aria-label="Formulario de agendamiento de cita, 4 pasos"
+    (selectionChange)="onStepChange($event)"
+  >
+    <mat-step [stepControl]="modalidadGroup" [aria-label]="pasos[0].encabezado">
+      <ng-template matStepLabel>{{ pasos[0].etiqueta }}</ng-template>
+      <h2 #stepHeading tabindex="-1" class="paso-encabezado">{{ pasos[0].encabezado }}</h2>
+      <app-modalidad-step [formGroup]="modalidadGroup" [opciones]="modalidades" />
+      <div class="paso-acciones">
+        <button mat-flat-button color="primary" matStepperNext type="button">
+          Siguiente
+        </button>
+      </div>
+    </mat-step>
+
+    <mat-step [stepControl]="fechaGroup" [aria-label]="pasos[1].encabezado">
+      <ng-template matStepLabel>{{ pasos[1].etiqueta }}</ng-template>
+      <h2 #stepHeading tabindex="-1" class="paso-encabezado">{{ pasos[1].encabezado }}</h2>
+      <app-fecha-step
+        [formGroup]="fechaGroup"
+        [fechaMasProxima]="fechaMasProxima"
+        [dateFilter]="dateFilter"
+      />
+      <div class="paso-acciones">
+        <button mat-stroked-button matStepperPrevious type="button">Atrás</button>
+        <button mat-flat-button color="primary" matStepperNext type="button">
+          Siguiente
+        </button>
+      </div>
+    </mat-step>
+
+    <mat-step [stepControl]="trabajadorHoraGroup" [aria-label]="pasos[2].encabezado">
+      <ng-template matStepLabel>{{ pasos[2].etiqueta }}</ng-template>
+      <h2 #stepHeading tabindex="-1" class="paso-encabezado">{{ pasos[2].encabezado }}</h2>
+      <app-trabajador-hora-step [formGroup]="trabajadorHoraGroup" [horarios]="horarios()" />
+      <div class="paso-acciones">
+        <button mat-stroked-button matStepperPrevious type="button">Atrás</button>
+        <button mat-flat-button color="primary" matStepperNext type="button">
+          Siguiente
+        </button>
+      </div>
+    </mat-step>
+
+    <mat-step [stepControl]="citaForm" [aria-label]="pasos[3].encabezado">
+      <ng-template matStepLabel>{{ pasos[3].etiqueta }}</ng-template>
+      <h2 #stepHeading tabindex="-1" class="paso-encabezado">{{ pasos[3].encabezado }}</h2>
+      <app-confirmacion-step
+        [citaForm]="citaForm"
+        [modalidades]="modalidades"
+        [horarios]="horarios()"
+        [estado]="estadoCita()"
+        [codigoConfirmacion]="codigoConfirmacion()"
+        (asignar)="onAsignar()"
+      />
+      <div class="paso-acciones">
+        @if (estadoCita() === 'pendiente') {
+          <button mat-stroked-button matStepperPrevious type="button">Atrás</button>
+        }
+      </div>
+    </mat-step>
+  </mat-stepper>
+</main>

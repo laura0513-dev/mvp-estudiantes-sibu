@@ -1,0 +1,48 @@
+<div class="fecha-step">
+  <p class="fecha-proxima-anuncio">
+    <mat-icon aria-hidden="true">event_available</mat-icon>
+    <span>
+      La fecha más próxima disponible es
+      <strong>{{ fechaMasProxima | date: "EEEE d 'de' MMMM 'de' y" : '' : 'es-CO' }}</strong>.
+      Puedes usarla directamente o elegir otra fecha posterior en el calendario.
+    </span>
+  </p>
+
+  <button
+    mat-stroked-button
+    type="button"
+    class="usar-fecha-proxima"
+    (click)="usaFechaMasProxima()"
+    [attr.aria-pressed]="esFechaProximaSeleccionada()"
+  >
+    <mat-icon aria-hidden="true">check_circle</mat-icon>
+    Usar esta fecha ({{ fechaMasProxima | date: 'd MMM' : '' : 'es-CO' }})
+  </button>
+
+  <form [formGroup]="formGroup" class="fecha-form" novalidate>
+    <mat-form-field appearance="outline" class="fecha-field">
+      <mat-label>O selecciona otra fecha</mat-label>
+      <input
+        matInput
+        [matDatepicker]="picker"
+        formControlName="fechaSeleccionada"
+        [matDatepickerFilter]="dateFilter"
+        [min]="fechaMasProxima"
+        readonly
+      />
+      <mat-hint id="fecha-hint">
+        Los días marcados como no disponibles no tienen cupos y no se pueden seleccionar.
+      </mat-hint>
+      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+      @if (muestraError) {
+        <mat-error>Selecciona una fecha disponible para continuar.</mat-error>
+      }
+    </mat-form-field>
+  </form>
+
+  <p class="fecha-actual-anuncio" role="status">
+    Fecha seleccionada actualmente:
+    <strong>{{ control?.value ? (control?.value | date: 'full' : '' : 'es-CO') : 'ninguna' }}</strong>
+  </p>
+</div>

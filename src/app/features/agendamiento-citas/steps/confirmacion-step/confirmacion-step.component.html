@@ -1,0 +1,73 @@
+<div class="confirmacion-step">
+  <p class="confirmacion-intro">Revisa que la información de tu cita sea correcta antes de confirmarla.</p>
+
+  <dl class="resumen-lista">
+    <div class="resumen-item">
+      <dt>Modalidad</dt>
+      <dd>{{ modalidadSeleccionada?.titulo ?? 'No seleccionada' }}</dd>
+    </div>
+    <div class="resumen-item">
+      <dt>Fecha</dt>
+      <dd>
+        {{ fechaSeleccionada ? (fechaSeleccionada | date: "EEEE d 'de' MMMM 'de' y" : '' : 'es-CO') : 'No seleccionada' }}
+      </dd>
+    </div>
+    <div class="resumen-item">
+      <dt>Trabajador social</dt>
+      <dd>{{ horarioSeleccionado?.trabajadorNombre ?? 'No seleccionado' }}</dd>
+    </div>
+    <div class="resumen-item">
+      <dt>Hora</dt>
+      <dd>{{ horarioSeleccionado?.horaTexto ?? 'No seleccionada' }}</dd>
+    </div>
+  </dl>
+
+  @if (estado !== 'asignada') {
+    <button
+      mat-flat-button
+      color="primary"
+      type="button"
+      class="boton-asignar"
+      [disabled]="!puedeAsignar || estado === 'asignando'"
+      (click)="onAsignar()"
+    >
+      @if (estado === 'asignando') {
+        <mat-progress-spinner
+          mode="indeterminate"
+          diameter="20"
+          aria-hidden="true"
+          class="spinner-boton"
+        ></mat-progress-spinner>
+        <span>Asignando cita…</span>
+      } @else {
+        <span>Asignar cita</span>
+      }
+    </button>
+
+    @if (!citaForm.valid) {
+      <p class="aviso-incompleto" role="alert">
+        <mat-icon aria-hidden="true">error</mat-icon>
+        Falta información por completar en los pasos anteriores.
+      </p>
+    }
+  } @else {
+    <div class="confirmacion-exitosa" role="status">
+      <mat-icon aria-hidden="true">check_circle</mat-icon>
+      <div>
+        <p class="estado-asignada">
+          <span class="badge-asignada">
+            <mat-icon aria-hidden="true">event_available</mat-icon>
+            Asignada
+          </span>
+        </p>
+        <p>
+          Tu cita quedó <strong>asignada</strong>. Se envió una notificación de confirmación por
+          correo electrónico (simulado).
+        </p>
+        @if (codigoConfirmacion) {
+          <p>Código de confirmación: <strong>{{ codigoConfirmacion }}</strong></p>
+        }
+      </div>
+    </div>
+  }
+</div>
