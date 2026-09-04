@@ -26,6 +26,13 @@ export class CitaEstadoService {
   constructor(private readonly agendamientoMock: AgendamientoMockService) {
     // "Mi Cita" arranca con una cita mock ya asignada (en vez del estado vacío) para mostrar de
     // entrada cómo se ve una cita confirmada, con todos sus datos.
+    // TODO-BACKEND: Reemplazar este mock por una llamada real al backend.
+    // Hoy: "Mi Cita" arranca siempre con una cita mock ya asignada (crearCitaMockInicial),
+    // en vez de reflejar si el estudiante realmente tiene o no una cita agendada. Debe:
+    // consultar al backend la cita vigente del estudiante autenticado al iniciar la app y
+    // hacer citaSubject.next(cita) (o null si no tiene ninguna) con esa respuesta, con la
+    // misma forma que CitaConfirmada (ver shared/models/cita.model.ts).
+    // Sugerencia de endpoint: GET /api/citas/mi-cita
     this.citaSubject = new BehaviorSubject<CitaConfirmada | null>(this.crearCitaMockInicial());
     this.cita$ = this.citaSubject.asObservable();
   }
@@ -34,10 +41,23 @@ export class CitaEstadoService {
     return this.intentosSubject.value;
   }
 
+  // TODO-BACKEND: hoy solo actualiza el estado local/en memoria (BehaviorSubject) tras la
+  // respuesta simulada de AgendamientoMockService.asignarCita(). Cuando ese método se
+  // conecte a un POST real, este método debe llamarse únicamente si esa petición fue
+  // exitosa (usar la cita que devuelva el backend, no la armada en el cliente en
+  // AgendaComponent.onAsignar).
   confirmarCita(cita: CitaConfirmada): void {
     this.citaSubject.next(cita);
   }
 
+  // TODO-BACKEND: Reemplazar esta simulación por una petición real al backend.
+  // Hoy: solo actualiza el estado local/en memoria (intentosSubject y citaSubject), no llama
+  // a ningún backend ni maneja error. Debe: enviar una petición real (PATCH o DELETE según
+  // el diseño de la API) para cancelar la cita vigente, manejar el caso de error de esa
+  // petición (ej. no descontar el intento ni limpiar citaSubject si la petición falla), y
+  // solo tras una respuesta exitosa actualizar intentosSubject/citaSubject/canceladaSubject
+  // con los datos que confirme el backend.
+  // Sugerencia de endpoint: PATCH /api/citas/:id/cancelar
   cancelarCita(): void {
     if (this.intentosSubject.value <= 0) {
       return;
