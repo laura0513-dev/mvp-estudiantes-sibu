@@ -1,51 +1,70 @@
-// Include theming for Angular Material with `mat.theme()`.
-// This Sass mixin will define CSS variables that are used for styling Angular Material
-// components according to the Material 3 design spec.
-// Learn more about theming and how to use it for your application's
-// custom components at https://material.angular.dev/guide/theming
 @use '@angular/material' as mat;
-@use 'app/features/agendamiento-citas/styles/custom-theme' as tema-placeholder;
+@use 'app/shared/styles/custom-theme' as tema-placeholder;
+@use 'app/shared/styles/lineamientos-udea' as lineamientos;
+
+// Incluye los estilos estructurales comunes de Angular Material una sola vez.
+@include mat.core();
+
+// Aplica la paleta placeholder definida en custom-theme.scss (ver ese
+// archivo para reemplazarla por los colores del manual de marca).
+@include tema-placeholder.aplicar-tema-placeholder();
 
 html {
+  // 100% (no un valor fijo en px) para no anular el tamaño de fuente que el
+  // usuario haya configurado en su navegador: con el 100% por defecto del
+  // navegador esto ya equivale a 16px, el mínimo que exige el lineamiento
+  // institucional de tipografía (ver lineamientos-udea.scss).
+  font-size: 100%;
+}
+
+html,
+body {
   height: 100%;
-  @include mat.theme(
-    (
-      color: (
-        primary: mat.$azure-palette,
-        tertiary: mat.$blue-palette,
-      ),
-      typography: Roboto,
-      density: 0,
-    )
-  );
-  // Sobrescribe los tokens de color anteriores con la paleta placeholder
-  // definida en custom-theme.scss (ver ese archivo para reemplazarla).
-  @include tema-placeholder.aplicar-tema-placeholder();
+}
+
+body {
+  margin: 0;
+  @include lineamientos.udea-tipografia-base;
+}
+
+// Tipografía institucional (ver lineamientos-udea.scss): Bold para menús y
+// encabezados de sección. Las pestañas superiores (Agenda / Mi Cita) actúan
+// como menú de navegación del proyecto.
+.mat-tab-label {
+  @include lineamientos.udea-encabezado-seccion;
+}
+
+// Enlaces de texto: el criterio 1.4.1 (WCAG 2.1 AA) exige que no se
+// distingan solo por el color, por eso llevan subrayado permanente (ver
+// lineamientos-udea.scss).
+a {
+  @include lineamientos.udea-enlace;
 }
 
 // Refuerza un foco visible en todos los elementos interactivos, requisito
 // crítico de accesibilidad. Angular Material ya lo trae por defecto; esta
 // regla evita que quede sobreescrito accidentalmente.
-:focus-visible {
-  outline: 0.125rem solid var(--mat-sys-primary);
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 0.125rem solid #{tema-placeholder.$color-primary};
   outline-offset: 0.125rem;
 }
 
-body {
-  // Default the application to a light color theme. This can be changed to
-  // `dark` to enable the dark color theme, or to `light dark` to defer to the
-  // user's system settings.
-  color-scheme: light;
-
-  // Set a default background, font and text colors for the application using
-  // Angular Material's system-level CSS variables. Learn more about these
-  // variables at https://material.angular.dev/guide/system-variables
-  background-color: var(--mat-sys-surface);
-  color: var(--mat-sys-on-surface);
-  font: var(--mat-sys-body-medium);
-
-  // Reset the user agent margin.
-  margin: 0;
-  height: 100%;
+// El snackbar simple (p. ej. el que confirma la asignación de la cita al presionar
+// "Agendar cita", ver AgendaComponent.onAsignar) se inserta fuera del árbol de
+// componentes, en el overlay de CDK: no puede estilizarse desde el .scss de ningún
+// componente, solo desde aquí. Su botón de acción ("Cerrar") hereda por defecto el
+// tono "800" del acento institucional como color de texto (ver $app-accent en
+// custom-theme.scss) sobre el fondo casi negro del snackbar (#323232): ambos son
+// oscuros y el botón apenas se distingue. Se fija un fondo gris claro con texto
+// negro — reutilizando $color-button-disabled (ver custom-theme.scss): ≈15.9:1 como
+// texto sobre el gris (supera el 4.5:1 de 1.4.3) y ≈15.9:1 como fondo no textual
+// sobre el negro del snackbar (supera el 3:1 de 1.4.11).
+.mat-simple-snackbar-action button.mat-button {
+  background-color: tema-placeholder.$color-button-disabled;
+  color: #000000;
 }
-/* You can add global styles to this file, and also import other style files */

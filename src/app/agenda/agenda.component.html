@@ -1,0 +1,65 @@
+<main class="agendamiento-contenedor">
+  <h2>Agendar cita con trabajador social</h2>
+  <p class="agendamiento-intro">
+    Completa los siguientes pasos para agendar tu cita. Puedes navegar entre los pasos con el
+    teclado (Tab, flechas, Enter o Espacio) y regresar a un paso anterior en cualquier momento sin
+    perder la información ya ingresada.
+  </p>
+
+  <mat-stepper
+    linear
+    #stepper
+    [orientation]="esMovil ? 'vertical' : 'horizontal'"
+    aria-label="Formulario de agendamiento de cita, 3 pasos"
+    (selectionChange)="onStepChange($event)"
+  >
+    <mat-step [stepControl]="modalidadGroup" [aria-label]="pasos[0].encabezado">
+      <ng-template matStepLabel>{{ pasos[0].etiqueta }}</ng-template>
+      <h2 #stepHeading tabindex="-1" class="paso-encabezado">{{ pasos[0].encabezado }}</h2>
+      <app-modalidad-step [formGroup]="modalidadGroup" [opciones]="modalidades"></app-modalidad-step>
+      <div class="paso-acciones">
+        <button mat-flat-button color="primary" matStepperNext type="button" [disabled]="modalidadGroup.invalid">
+          Siguiente
+        </button>
+      </div>
+    </mat-step>
+
+    <mat-step [stepControl]="horariosGroup" [aria-label]="pasos[1].encabezado">
+      <ng-template matStepLabel>{{ pasos[1].etiqueta }}</ng-template>
+      <h2 #stepHeading tabindex="-1" class="paso-encabezado">{{ pasos[1].encabezado }}</h2>
+      <app-horarios-step
+        [formGroup]="horariosGroup"
+        [fechaMasProxima]="fechaMasProxima"
+        [dateFilter]="dateFilter"
+        [horarios]="horarios"
+        (fechaCambiada)="onFechaCambiada($event)"
+      ></app-horarios-step>
+      <div class="paso-acciones">
+        <button mat-stroked-button matStepperPrevious type="button">Atrás</button>
+        <button mat-flat-button color="primary" matStepperNext type="button" [disabled]="horariosGroup.invalid">
+          Siguiente
+        </button>
+      </div>
+    </mat-step>
+
+    <mat-step [stepControl]="citaForm" [aria-label]="pasos[2].encabezado">
+      <ng-template matStepLabel>{{ pasos[2].etiqueta }}</ng-template>
+      <div class="paso-contenido-centrado">
+        <h2 #stepHeading tabindex="-1" class="paso-encabezado">{{ pasos[2].encabezado }}</h2>
+        <app-confirmacion-step
+          [citaForm]="citaForm"
+          [modalidades]="modalidades"
+          [horarios]="horarios"
+          [estado]="estadoCita"
+          [codigoConfirmacion]="codigoConfirmacion"
+          (asignar)="onAsignar()"
+        ></app-confirmacion-step>
+      </div>
+      <div class="paso-acciones">
+        <button *ngIf="estadoCita === 'pendiente'" mat-stroked-button matStepperPrevious type="button">
+          Atrás
+        </button>
+      </div>
+    </mat-step>
+  </mat-stepper>
+</main>

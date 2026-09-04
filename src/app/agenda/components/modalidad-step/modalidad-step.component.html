@@ -1,0 +1,37 @@
+<form [formGroup]="formGroup" class="modalidad-form" novalidate>
+  <fieldset class="modalidad-fieldset" [attr.aria-describedby]="muestraError ? 'modalidad-error' : null">
+    <legend class="modalidad-legend">Selecciona la modalidad de tu cita</legend>
+
+    <mat-radio-group
+      formControlName="tipo"
+      class="modalidad-group"
+      aria-label="Modalidad de la cita"
+    >
+      <!--
+        Todo el bloque .modalidad-opcion es clickeable (no solo el círculo del
+        radio): el título Y la descripción viven dentro de <mat-radio-button>,
+        que Angular Material envuelve en un único <label>. Eso asocia el
+        control con todo su contenido de forma programática, no solo visual
+        (WCAG 1.3.1), y hace que el nombre accesible del radio incluya todo
+        el contenido clickeable (WCAG 4.1.2) — por eso ya no se usa
+        aria-describedby aquí: la descripción pasa a formar parte del nombre
+        accesible en vez de ser una descripción aparte, y mantener ambos
+        habría duplicado el anuncio en lectores de pantalla.
+      -->
+      <div class="modalidad-opcion" *ngFor="let opcion of opciones; trackBy: trackByValor">
+        <mat-radio-button [value]="opcion.valor">
+          <span class="opcion-titulo">
+            <mat-icon aria-hidden="true">{{ opcion.icono }}</mat-icon>
+            {{ opcion.titulo }}
+          </span>
+          <p class="opcion-descripcion">{{ opcion.descripcion }}</p>
+        </mat-radio-button>
+      </div>
+    </mat-radio-group>
+
+    <p class="error-mensaje" id="modalidad-error" role="alert" *ngIf="muestraError">
+      <mat-icon aria-hidden="true">error</mat-icon>
+      Debes seleccionar una modalidad para continuar.
+    </p>
+  </fieldset>
+</form>

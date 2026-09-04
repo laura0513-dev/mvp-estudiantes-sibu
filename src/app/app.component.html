@@ -1,0 +1,22 @@
+<a class="skip-link" href="#contenido-principal">Saltar al contenido principal</a>
+<div id="contenido-principal">
+  <h1 class="titulo-app">Citas estudiantes</h1>
+
+  <mat-tab-group
+    class="tabs-principales"
+    animationDuration="0ms"
+    aria-label="Secciones del agendamiento de citas"
+    [(selectedIndex)]="tabSeleccionado"
+  >
+    <mat-tab label="Agenda">
+      <ng-template matTabContent>
+        <app-agenda></app-agenda>
+      </ng-template>
+    </mat-tab>
+    <mat-tab label="Mi Cita">
+      <ng-template matTabContent>
+        <app-mi-cita></app-mi-cita>
+      </ng-template>
+    </mat-tab>
+  </mat-tab-group>
+</div>

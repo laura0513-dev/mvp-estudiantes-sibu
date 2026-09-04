@@ -1,0 +1,64 @@
+// ============================================================
+// BOTONES CON ESTADO DE CARGA (loading)
+// Mixins y clases reutilizables para botones que disparan una acción asíncrona (ej.
+// "Cerrar Agenda", "Asignar cita"): evitan que el ícono/spinner de carga se muestre junto
+// al texto (lo que partía el contenido del botón en dos líneas) y que el botón cambie de
+// ancho al alternar entre su estado normal y su estado de carga.
+//
+// Uso en el componente:
+//   <button
+//     class="mi-boton btn-con-carga"
+//     [class.btn-loading-state]="cargando"
+//     [disabled]="cargando"
+//     [attr.aria-busy]="cargando ? 'true' : null"
+//   >
+//     <mat-progress-spinner *ngIf="cargando" ... class="spinner-boton"></mat-progress-spinner>
+//     <span class="btn-texto">Texto del botón</span>
+//   </button>
+// ============================================================
+
+/// Ancho mínimo común a todo botón que pueda entrar en estado de carga: mantiene el
+/// mismo ancho entre su estado normal (con texto) y su estado de carga (solo ícono/spinner).
+$button-min-width: 9rem;
+
+/// Oculta visualmente un elemento sin quitarlo del DOM ni del árbol de accesibilidad: el
+/// texto del botón sigue disponible para lectores de pantalla mientras está en loading.
+@mixin visualmente-oculto {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.sr-only {
+  @include visualmente-oculto;
+}
+
+/// Estado normal (y base) de un botón con posible estado de carga: fija su ancho mínimo y
+/// centra su contenido (el texto solo, o un ícono decorativo junto al texto en la misma línea).
+@mixin btn-con-carga {
+  min-width: $button-min-width;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.btn-con-carga {
+  @include btn-con-carga;
+}
+
+/// Actívala (junto con [attr.aria-busy]="true" y [disabled]="true" en el propio botón)
+/// mientras el botón está cargando: el texto (`.btn-texto`) se oculta visualmente sin
+/// desaparecer del DOM, y solo queda visible el ícono/spinner de carga, centrado dentro
+/// del mismo ancho mínimo que el botón ya tenía en su estado normal.
+.btn-loading-state {
+  .btn-texto {
+    @include visualmente-oculto;
+  }
+}

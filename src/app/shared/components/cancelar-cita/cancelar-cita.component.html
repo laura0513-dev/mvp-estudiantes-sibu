@@ -1,0 +1,22 @@
+<ng-container *ngIf="intentosRestantes$ | async as intentosRestantes">
+  <button
+    mat-stroked-button
+    color="warn"
+    type="button"
+    class="boton-cancelar-cita"
+    [disabled]="intentosRestantes === 0"
+    [attr.aria-describedby]="intentosRestantes === 0 ? 'cancelar-cita-agotado' : null"
+    (click)="abrirDialogoCancelacion()"
+  >
+    Cancelar cita
+  </button>
+  <p
+    *ngIf="intentosRestantes === 0"
+    id="cancelar-cita-agotado"
+    class="cancelar-cita-agotado-mensaje"
+    role="status"
+  >
+    <mat-icon aria-hidden="true">info</mat-icon>
+    Ya no dispones de intentos de cancelación o reagendamiento disponibles.
+  </p>
+</ng-container>

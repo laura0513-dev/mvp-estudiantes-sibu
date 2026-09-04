@@ -1,0 +1,38 @@
+@use './shared/styles/custom-theme' as tema;
+@use './shared/styles/lineamientos-udea' as lineamientos;
+
+:host {
+  display: block;
+  max-width: 56rem;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 3rem;
+}
+
+.skip-link {
+  position: absolute;
+  left: -999rem;
+  top: 0;
+  background: tema.$color-primary;
+  color: tema.$color-on-primary;
+  padding: 0.75rem 1rem;
+  z-index: 100;
+  border-radius: 0 0 0.25rem 0;
+
+  &:focus {
+    left: 0;
+  }
+
+  // El anillo de foco global (styles.scss) es del mismo verde institucional
+  // que el fondo de este enlace: sobre su propio fondo sería invisible
+  // (0:1, falla 2.4.7). Aquí se usa el color de texto ya usado en el propio
+  // enlace (blanco), que sí cumple ≥3:1 sobre el fondo verde.
+  &:focus-visible {
+    outline-color: #{tema.$color-on-primary};
+  }
+}
+
+.titulo-app {
+  @include lineamientos.udea-titulo-principal;
+  font-size: 1.5rem;
+  margin: 0 0 1rem;
+}

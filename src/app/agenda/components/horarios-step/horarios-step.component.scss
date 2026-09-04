@@ -1,0 +1,61 @@
+@use '../../../shared/styles/custom-theme' as tema;
+@use '../../../shared/styles/lineamientos-udea' as lineamientos;
+
+.horarios-step {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.horarios-fecha-anuncio {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  background: tema.$color-highlight-success;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  margin: 0;
+  // Antes de este cambio el texto no tenía color propio (heredaba el negro
+  // por defecto del navegador). Se deja explícito con $color-text-primary,
+  // que sobre $color-highlight-success mide ~8.3:1 (cumple 4.5:1); el mismo
+  // color hereda el ícono decorativo de al lado.
+  color: tema.$color-text-primary;
+}
+
+.horarios-columnas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+.horarios-calendario {
+  flex: 1 1 20rem;
+  // Permite que el calendario se encoja por debajo de su ancho de flex-basis
+  // en vez de forzar scroll horizontal en viewports angostos (1.4.10:
+  // reflow sin scroll horizontal a 320px CSS de ancho).
+  min-width: 0;
+}
+
+.horarios-lista {
+  flex: 1 1 18rem;
+  min-width: 0;
+}
+
+.horarios-lista-titulo {
+  @include lineamientos.udea-encabezado-seccion;
+  font-size: 1rem;
+  margin: 0 0 1rem;
+}
+
+.horarios-lista-vacio {
+  color: tema.$color-text-secondary;
+}
+
+.horario-field {
+  width: 100%;
+
+  ::ng-deep .mat-form-field-label {
+    text-align: left;
+  }
+}

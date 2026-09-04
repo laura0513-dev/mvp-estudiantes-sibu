@@ -1,0 +1,18 @@
+<h2 mat-dialog-title>Cancelar y reagendar tu cita</h2>
+<mat-dialog-content>
+  <p>
+    Puedes cancelar tu cita actual y agendar una nueva en su lugar. Te
+    {{ data.intentosRestantes === 1 ? 'queda' : 'quedan' }}
+    <strong>{{ data.intentosRestantes }}</strong>
+    {{ data.intentosRestantes === 1 ? 'intento' : 'intentos' }} de cancelación o reagendamiento
+    disponible{{ data.intentosRestantes === 1 ? '' : 's' }}.
+  </p>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-stroked-button type="button" cdkFocusInitial (click)="rechazar()">
+    No, mantener mi cita
+  </button>
+  <button mat-flat-button color="warn" type="button" (click)="confirmar()">
+    Sí, cancelar y reagendar
+  </button>
+</mat-dialog-actions>

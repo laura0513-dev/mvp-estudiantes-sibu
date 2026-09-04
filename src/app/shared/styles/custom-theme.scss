@@ -1,0 +1,163 @@
+// ============================================================
+// PALETA DE COLORES DEL SISTEMA — PALETA INSTITUCIONAL
+// Colores del manual de marca institucional. $color-surface, $color-text-primary y
+// $color-text-secondary no tienen equivalente en la paleta de marca enviada (son
+// neutros de fondo/texto): se mantienen en los valores estándar de Material Design.
+// ============================================================
+$color-primary: #026937; // Verde institucional principal (Pantone 349 C)
+$color-secondary: #35944b; // Verde secundario (Pantone 7740 C)
+$color-accent: #069a7e; // Verde-azulado de acento/CTA (Pantone 334 C)
+$color-success: #43b649; // Verde de confirmación/éxito (Pantone 361 C)
+$color-warn: #f9a12c; // Naranja para errores y advertencias (Pantone 137 C)
+$color-surface: #ffffff; // Neutro estándar de Material (sin equivalente en la paleta de marca)
+$color-text-primary: #212121; // Gris oscuro estándar de Material (sin equivalente en la paleta de marca)
+$color-text-secondary: #757575; // Gris medio estándar de Material (sin equivalente en la paleta de marca)
+
+// Colores "on-*" (texto/íconos que van SOBRE los colores de arriba). Deben mantener un
+// contraste mínimo de 4.5:1 (WCAG AA): con la paleta institucional, el blanco ya no es
+// legible sobre $color-accent (3.5:1) ni sobre $color-warn (2.1:1), así que esos dos usan
+// $color-text-primary en su lugar (4.5:1 y 7.8:1 respectivamente).
+$color-on-primary: #ffffff;
+$color-on-secondary: #18181b;
+$color-on-accent: $color-text-primary;
+$color-on-warn: $color-text-primary;
+
+// Verde 361 C (#43b649) al 70% de opacidad — uso: resaltado. El color
+// efectivo resultante sobre un fondo claro es ~rgb(123, 204, 128): blanco
+// encima mide solo 1.95:1 (no cumple ni el 3:1 de texto grande), negro mide
+// 10.79:1 y el verde institucional oscuro ($color-primary) 3.51:1 (solo
+// cumple si el texto es grande o negrita ≥14pt). Por eso dondequiera que se
+// use este color de fondo, el texto que quede encima debe verificarse/
+// ajustarse caso por caso (ver los componentes donde se usa).
+$color-highlight-success: rgba(67, 182, 73, 0.2);
+
+// ============================================================
+// ESPACIADO DE SECCIONES DE NIVEL SUPERIOR
+// Padding del contenedor raíz de los componentes que ocupan una
+// pestaña completa (Agenda, Mi Cita), para que ambas secciones
+// mantengan el mismo espaciado dentro de su pestaña.
+// ============================================================
+$padding-seccion: 1rem 0 3rem;
+
+@use 'sass:color';
+@use 'sass:map';
+@use 'lineamientos-udea' as lineamientos;
+
+// Tonos auxiliares derivados de la superficie/texto, usados como fondos de
+// tarjeta y bordes sutiles en los componentes del wizard (equivalentes a los
+// roles "surface-container-low" / "outline-variant" de Material 3, que no
+// existen en el sistema de theming M2 de Angular Material 13).
+$color-surface-container-low: color.scale($color-surface, $lightness: -3%);
+
+// El valor original (color.scale($color-text-secondary, $lightness: 70%))
+// daba un gris ~#d6d6d6, que mide solo 1.45:1 sobre blanco: no cumple el
+// mínimo de 3:1 para bordes de componentes UI (1.4.11). Este tono mide
+// 3.45:1 sobre blanco.
+$color-outline-variant: #8a8a8a;
+
+// Gris claro reutilizable para "elemento inactivo/neutro sobre fondo oscuro" (p. ej. el
+// botón de acción del snackbar, ver styles.scss): con texto negro encima mide ≈15.9:1
+// (supera el 4.5:1 de 1.4.3) y, como fondo no textual sobre un fondo oscuro, ≈15.9:1
+// también (supera el 3:1 de 1.4.11). Se deja como variable para reutilizarse en
+// cualquier otro botón similar del proyecto, en vez de repetir el valor hex suelto.
+$color-button-disabled: #e0e0e0;
+
+@use '@angular/material' as mat;
+
+// Angular Material 13 usa temas M2: cada color del tema necesita un mapa
+// con los 14 tonos (50-900 + A100-A700), no un solo hex. Esta función
+// aproxima ese mapa a partir de UN color base, para poder seguir dejando
+// una sola variable placeholder por color (arriba) y que sea trivial de
+// reemplazar por la paleta real de marca (o por mat.define-palette con
+// el mapa oficial que entregue diseño).
+// $color-contraste: color de texto/ícono que Angular Material aplica automáticamente
+// sobre los tonos 500 en adelante de la paleta (donde cae el color base, ver "500: $color"
+// abajo). Por defecto es blanco, pero algunos colores de marca (ver $color-on-accent y
+// $color-on-warn más arriba) no dan un contraste legible con blanco y necesitan pasar aquí
+// su propio $color-on-*, para que los componentes de Material (botones, chips, etc.) usen
+// un texto con contraste mínimo de 4.5:1 (WCAG AA) en vez de quedar hardcodeado en blanco.
+@function _paleta-desde-color($color, $color-contraste: white) {
+  @return (
+    50: color.scale($color, $lightness: 85%),
+    100: color.scale($color, $lightness: 70%),
+    200: color.scale($color, $lightness: 55%),
+    300: color.scale($color, $lightness: 40%),
+    400: color.scale($color, $lightness: 20%),
+    500: $color,
+    600: color.scale($color, $lightness: -15%),
+    700: color.scale($color, $lightness: -30%),
+    800: color.scale($color, $lightness: -45%),
+    900: color.scale($color, $lightness: -60%),
+    A100: color.scale($color, $lightness: 70%),
+    A200: color.scale($color, $lightness: 55%),
+    A400: color.scale($color, $lightness: -15%),
+    A700: color.scale($color, $lightness: -30%),
+    contrast: (
+      50: rgba(black, 0.87),
+      100: rgba(black, 0.87),
+      200: rgba(black, 0.87),
+      300: rgba(black, 0.87),
+      400: rgba(black, 0.87),
+      500: $color-contraste,
+      600: $color-contraste,
+      700: $color-contraste,
+      800: $color-contraste,
+      900: $color-contraste,
+      A100: rgba(black, 0.87),
+      A200: $color-contraste,
+      A400: $color-contraste,
+      A700: $color-contraste,
+    ),
+  );
+}
+
+// $color-warn (#f9a12c) y $color-accent (#069a7e) solo cumplen 4.5:1 usados
+// como FONDO con su respectivo $color-on-* encima (ver comentario más
+// arriba). Angular Material usa además el tono "500" (el color base) de
+// cada paleta como color de TEXTO en varios de sus propios componentes
+// (p. ej. .mat-error usa el tono "text" del warn, y el asterisco de campo
+// requerido usa el "text" del accent) — con el 500 de warn/accent eso mide
+// 2.07:1 y 3.54:1 sobre blanco respectivamente, sin cumplir 1.4.3. Se les
+// pasa $text: 800 para que Material use en su lugar el tono "800" de cada
+// paleta (ver _paleta-desde-color arriba), que sí cumple: 5.34:1 y 8.79:1.
+$app-primary: mat.define-palette(_paleta-desde-color($color-primary, $color-on-primary));
+$app-accent: mat.define-palette(_paleta-desde-color($color-accent, $color-on-accent), $text: 800);
+$app-warn: mat.define-palette(_paleta-desde-color($color-warn, $color-on-warn), $text: 800);
+
+// Mismo tono "800" de la paleta de warn, expuesto como variable propia para
+// los mensajes de error/advertencia que el proyecto define fuera de los
+// componentes de Angular Material (donde $color-warn no es utilizable
+// directamente como texto: ver el comentario de $app-warn arriba).
+$color-warn-texto: map.get(_paleta-desde-color($color-warn, $color-on-warn), 800);
+
+$app-theme: mat.define-light-theme(
+  (
+    color: (
+      primary: $app-primary,
+      accent: $app-accent,
+      warn: $app-warn,
+    ),
+    // Tipografía institucional (Lato, con Arial como alternativa): ver
+    // lineamientos-udea.scss. Se aplica aquí para que llegue también a los
+    // textos propios de Angular Material (botones, stepper, hints, etc.),
+    // no solo al resto del proyecto.
+    typography: mat.define-typography-config($font-family: lineamientos.$udea-font-family),
+    density: 0,
+  )
+);
+
+// Aplica los placeholders anteriores a todos los componentes de Angular
+// Material (botones, stepper, radio, select, datepicker, etc.). Al
+// reemplazar las variables de arriba por la paleta real de marca, el
+// tema se actualiza en toda la aplicación sin tocar el resto del código.
+@mixin aplicar-tema-placeholder() {
+  @include mat.all-component-themes($app-theme);
+
+  // Corrección del color de botón en estado hover de los lineamientos
+  // institucionales (ver lineamientos-udea.scss): se centraliza aquí para
+  // no repetirla en cada componente que use un botón primario.
+  .mat-flat-button.mat-primary,
+  .mat-raised-button.mat-primary {
+    @include lineamientos.udea-boton-primario;
+  }
+}

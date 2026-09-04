@@ -1,0 +1,129 @@
+// ============================================================
+// LINEAMIENTOS DE ACCESIBILIDAD Y ESTILO — UNIVERSIDAD DE ANTIOQUIA
+//
+// Origen: documento institucional de lineamientos de accesibilidad y estilo
+// para formularios web de la Universidad de Antioquia. Fue revisado frente a
+// WCAG 2.1 nivel AA (el documento original solo cubría WCAG 2.0) y se
+// corrigió un error de contraste que tenía el propio documento en el color
+// de botón en estado hover — ver el comentario junto a
+// $udea-color-boton-hover-texto más abajo.
+//
+// Archivo genérico y autocontenido: solo variables, mixins y clases
+// reutilizables de estos lineamientos (tipografía, color de botones,
+// subrayado de enlaces). No importa ni referencia ningún otro archivo del
+// proyecto, para poder copiarse tal cual a otro proyecto institucional que
+// deba cumplir los mismos lineamientos (ej. mvp-trabajadorsocial).
+// ============================================================
+
+// ------------------------------------------------------------
+// 1. Tipografía institucional
+// Fuente principal Lato; Arial como alternativa/fallback para cuando Lato no
+// esté disponible en el dispositivo del usuario.
+// ------------------------------------------------------------
+$udea-font-family: 'Lato', Arial, sans-serif;
+
+$udea-peso-black: 900; // Título principal
+$udea-peso-bold: 700; // Menús y encabezados de sección (o su variante itálica, ver $udea-estilo-italic)
+$udea-peso-regular: 400; // Contenido
+$udea-estilo-italic: italic; // Resúmenes
+
+// Tamaño de fuente base: el lineamiento exige que no sea menor a 16px.
+// Se expresa en rem (no en px) para no bloquear el zoom de texto del
+// usuario: 1rem ya equivale a 16px con el tamaño raíz por defecto del
+// navegador, y sigue creciendo si el usuario aumentó ese tamaño por defecto.
+$udea-tamano-base: 1rem;
+
+@mixin udea-tipografia-base {
+  font-family: $udea-font-family;
+  font-size: $udea-tamano-base;
+}
+
+@mixin udea-titulo-principal {
+  font-family: $udea-font-family;
+  font-weight: $udea-peso-black;
+}
+
+@mixin udea-encabezado-seccion {
+  font-family: $udea-font-family;
+  font-weight: $udea-peso-bold;
+}
+
+// Solo debe usarse sobre texto en tamaño normal (≥ $udea-tamano-base): un
+// texto en cursiva y en tamaño pequeño reduce demasiado su legibilidad
+// efectiva, aunque el contraste de color medido sea correcto (por eso este
+// mixin fija explícitamente un tamaño mínimo en vez de heredar el que sea).
+@mixin udea-texto-resumen {
+  font-family: $udea-font-family;
+  font-style: $udea-estilo-italic;
+  font-weight: $udea-peso-regular;
+  font-size: max(#{$udea-tamano-base}, 1em);
+}
+
+// Por lineamiento institucional explícito, ningún bloque de texto debe usar
+// alineación justificada (los espacios irregulares que genera dificultan la
+// lectura, en particular para personas con dislexia). No se define un mixin
+// para esto: es una prohibición ("nunca usar text-align: justify"), no un
+// valor a aplicar.
+
+// ------------------------------------------------------------
+// 2. Color de botones institucional
+// Botón normal: fondo #026937, texto blanco (6.82:1, cumple).
+// Botón hover, corregido: el lineamiento original definía texto blanco
+// sobre fondo #8dc63f (2.04:1 — no cumple ni el 3:1 mínimo de un
+// componente no textual). La corrección de este documento cambia el texto a
+// verde oscuro institucional (#026937), pero medido como texto normal sobre
+// #8dc63f da 3.34:1: supera el 3:1 de un componente no textual, aunque
+// queda corto del 4.5:1 que exige un texto normal (1.4.3). Por eso el color
+// de texto que se aplica aquí es un tono ligeramente más oscuro dentro de la
+// misma familia de verde institucional (#014a2b), verificado en 5.10:1
+// sobre el fondo hover — fórmula de luminancia relativa de WCAG.
+// ------------------------------------------------------------
+$udea-color-boton-normal-fondo: #026937;
+$udea-color-boton-normal-texto: #ffffff;
+
+$udea-color-boton-hover-fondo: #8dc63f;
+$udea-color-boton-hover-texto: #014a2b;
+
+@mixin udea-boton-primario {
+  background-color: $udea-color-boton-normal-fondo;
+  color: $udea-color-boton-normal-texto;
+
+  &:hover:not(:disabled):not([aria-disabled='true']) {
+    background-color: $udea-color-boton-hover-fondo;
+    color: $udea-color-boton-hover-texto;
+  }
+
+  &:focus-visible {
+    outline: 0.1875rem solid $udea-color-boton-normal-fondo;
+    outline-offset: 0.125rem;
+  }
+}
+
+// ------------------------------------------------------------
+// 3. Enlaces
+// El criterio 1.4.1 (WCAG 2.1 AA) exige que un enlace no se distinga solo
+// por el color: se agrega subrayado permanente (no solo en hover/focus).
+// ------------------------------------------------------------
+$udea-color-enlace: #026937;
+
+@mixin udea-enlace {
+  color: $udea-color-enlace;
+  text-decoration: underline;
+  text-decoration-thickness: 0.0625rem;
+  text-underline-offset: 0.125rem;
+
+  &:hover {
+    text-decoration-thickness: 0.125rem;
+  }
+
+  // Indicador de foco propio (2.4.7): currentColor toma el verde
+  // institucional del enlace, que ya cumple contraste sobre fondos claros.
+  &:focus-visible {
+    outline: 0.1875rem solid currentColor;
+    outline-offset: 0.125rem;
+  }
+}
+
+.udea-enlace {
+  @include udea-enlace;
+}

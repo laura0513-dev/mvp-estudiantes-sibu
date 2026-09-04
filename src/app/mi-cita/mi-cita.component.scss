@@ -1,0 +1,64 @@
+@use '../shared/styles/custom-theme' as tema;
+@use '../shared/styles/lineamientos-udea' as lineamientos;
+
+:host {
+  display: block;
+  padding: tema.$padding-seccion;
+}
+
+.mi-cita {
+  max-width: 34rem;
+}
+
+.mi-cita-encabezado {
+  @include lineamientos.udea-encabezado-seccion;
+  font-size: 1.125rem;
+  margin: 0 0 1rem;
+}
+
+.resumen-lista {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 1.5rem;
+  row-gap: 0.75rem;
+  margin: 0 0 1.5rem;
+  padding: 1rem 1.25rem;
+  background: tema.$color-surface-container-low;
+  border-radius: 0.5rem;
+}
+
+.resumen-item {
+  display: contents;
+}
+
+.resumen-item dt {
+  font-weight: 600;
+  color: tema.$color-text-secondary;
+}
+
+.resumen-item dd {
+  @include lineamientos.udea-texto-resumen;
+  margin: 0;
+  // Verde institucional Pantone 349 C: 6.37:1 sobre el fondo real de este
+  // bloque ($color-surface-container-low, casi blanco), cumple 4.5:1.
+  color: tema.$color-primary;
+}
+
+.mi-cita-vacio {
+  color: tema.$color-text-secondary;
+}
+
+.badge-asignada {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-weight: 600;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999rem;
+  background: tema.$color-primary;
+  color: tema.$color-on-primary;
+
+  mat-icon {
+    flex-shrink: 0;
+  }
+}

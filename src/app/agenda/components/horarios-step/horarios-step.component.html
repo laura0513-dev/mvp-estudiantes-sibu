@@ -1,0 +1,53 @@
+<div class="horarios-step">
+  <p class="horarios-fecha-anuncio">
+    <mat-icon aria-hidden="true">event_available</mat-icon>
+    <span>
+      La fecha más próxima disponible es
+      <strong>{{ fechaMasProxima | date: "EEEE d 'de' MMMM 'de' y" : '' : 'es-CO' }}</strong>.
+      Los días marcados como no disponibles no tienen cupos y no se pueden seleccionar.
+    </span>
+  </p>
+
+  <div class="horarios-columnas">
+    <div class="horarios-calendario" role="group" aria-label="Selecciona el día de tu cita">
+      <mat-calendar
+        [selected]="fechaSeleccionada"
+        [minDate]="fechaMasProxima"
+        [dateFilter]="dateFilter"
+        (selectedChange)="onSeleccionFecha($event)"
+      ></mat-calendar>
+    </div>
+
+    <div class="horarios-lista">
+      <ng-container *ngIf="fechaSeleccionada; else sinFechaTpl">
+        <h3 class="horarios-lista-titulo">
+          Citas disponibles el {{ fechaSeleccionada | date: "EEEE d 'de' MMMM" : '' : 'es-CO' }}
+        </h3>
+        <form [formGroup]="formGroup" class="horarios-form" novalidate>
+          <mat-form-field appearance="outline" class="horario-field">
+            <mat-label>Trabajador social y horario</mat-label>
+            <mat-select formControlName="horarioId" panelWidth="auto">
+              <mat-optgroup label="Mañana">
+                <mat-option *ngFor="let opcion of horarios.manana; trackBy: trackById" [value]="opcion.id">
+                  {{ opcion.trabajadorNombre }} — {{ opcion.horaTexto }}
+                </mat-option>
+              </mat-optgroup>
+              <mat-optgroup label="Tarde">
+                <mat-option *ngFor="let opcion of horarios.tarde; trackBy: trackById" [value]="opcion.id">
+                  {{ opcion.trabajadorNombre }} — {{ opcion.horaTexto }}
+                </mat-option>
+              </mat-optgroup>
+            </mat-select>
+            <mat-hint id="horario-hint">Elige un trabajador social y una hora disponible.</mat-hint>
+            <mat-error *ngIf="muestraErrorHorario">Debes seleccionar un trabajador social y una hora.</mat-error>
+          </mat-form-field>
+        </form>
+      </ng-container>
+      <ng-template #sinFechaTpl>
+        <p class="horarios-lista-vacio" role="status">
+          Selecciona un día en el calendario para ver las citas disponibles.
+        </p>
+      </ng-template>
+    </div>
+  </div>
+</div>

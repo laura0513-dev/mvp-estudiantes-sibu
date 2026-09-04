@@ -1,0 +1,72 @@
+<div class="confirmacion-step">
+  <p class="confirmacion-intro">Revisa que la información de tu cita sea correcta antes de confirmarla.</p>
+
+  <dl class="resumen-lista">
+    <div class="resumen-item">
+      <dt>Modalidad</dt>
+      <dd>{{ modalidadSeleccionada?.titulo ?? 'No seleccionada' }}</dd>
+    </div>
+    <div class="resumen-item">
+      <dt>Fecha</dt>
+      <dd>
+        {{ fechaSeleccionada ? (fechaSeleccionada | date: "EEEE d 'de' MMMM 'de' y" : '' : 'es-CO') : 'No seleccionada' }}
+      </dd>
+    </div>
+    <div class="resumen-item">
+      <dt>Trabajador social</dt>
+      <dd>{{ horarioSeleccionado?.trabajadorNombre ?? 'No seleccionado' }}</dd>
+    </div>
+    <div class="resumen-item">
+      <dt>Hora</dt>
+      <dd>{{ horarioSeleccionado?.horaTexto ?? 'No seleccionada' }}</dd>
+    </div>
+  </dl>
+
+  <ng-container *ngIf="estado !== 'asignada'; else asignadaTpl">
+    <button
+      mat-flat-button
+      color="primary"
+      type="button"
+      class="boton-asignar btn-con-carga"
+      [class.btn-loading-state]="estado === 'asignando'"
+      [disabled]="!puedeAsignar || estado === 'asignando'"
+      [attr.aria-busy]="estado === 'asignando' ? 'true' : null"
+      (click)="onAsignar()"
+    >
+      <mat-progress-spinner
+        *ngIf="estado === 'asignando'"
+        mode="indeterminate"
+        diameter="20"
+        aria-hidden="true"
+        class="spinner-boton"
+      ></mat-progress-spinner>
+      <span class="btn-texto">Asignar cita</span>
+    </button>
+
+    <p class="aviso-incompleto" role="alert" *ngIf="!citaForm.valid">
+      <mat-icon aria-hidden="true">error</mat-icon>
+      Falta información por completar en los pasos anteriores.
+    </p>
+  </ng-container>
+
+  <ng-template #asignadaTpl>
+    <div class="confirmacion-exitosa" role="status">
+      <div>
+        <p class="estado-asignada">
+          <span class="badge-asignada">
+            <mat-icon aria-hidden="true">event_available</mat-icon>
+            Asignada
+          </span>
+        </p>
+        <p>
+          Tu cita quedó <strong>asignada</strong>. Se envió una notificación de confirmación por
+          correo electrónico (simulado).
+        </p>
+        <p *ngIf="codigoConfirmacion">
+          Código de confirmación: <strong>{{ codigoConfirmacion }}</strong>
+        </p>
+        <app-cancelar-cita></app-cancelar-cita>
+      </div>
+    </div>
+  </ng-template>
+</div>

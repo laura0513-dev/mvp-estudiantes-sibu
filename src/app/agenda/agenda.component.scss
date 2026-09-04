@@ -1,0 +1,120 @@
+@use '../shared/styles/custom-theme' as tema;
+@use '../shared/styles/lineamientos-udea' as lineamientos;
+
+:host {
+  display: block;
+  padding: tema.$padding-seccion;
+}
+
+h2 {
+  @include lineamientos.udea-encabezado-seccion;
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.agendamiento-intro {
+  color: tema.$color-text-secondary;
+  max-width: 42rem;
+  margin-bottom: 1.5rem;
+}
+
+::ng-deep .agendamiento-contenedor .mat-horizontal-content-container {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.paso-encabezado {
+  @include lineamientos.udea-encabezado-seccion;
+  font-size: 1.125rem;
+  margin: 1.5rem 0 1rem;
+
+  // El encabezado recibe foco por teclado programáticamente al cambiar de paso;
+  // no debe verse "clickeable", pero sí mostrar el anillo de foco cuando lo recibe.
+  &:focus-visible {
+    outline: 0.125rem solid #{tema.$color-primary};
+    outline-offset: 0.25rem;
+    border-radius: 0.125rem;
+  }
+}
+
+.paso-acciones {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.paso-contenido-centrado {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+::ng-deep .mat-horizontal-stepper-header-container {
+  flex-wrap: wrap;
+}
+
+// Resalta el header del paso activo (funciona igual en horizontal y
+// vertical: ambos usan el mismo <mat-step-header>). El texto del label ya
+// usa el color "text" del tema (negro al 87% de opacidad, no blanco) y el
+// ícono del paso seleccionado tiene su propio fondo verde institucional
+// opaco: ninguno de los dos pierde contraste al agregar este fondo detrás
+// (verificado: ~9.1:1 el texto del label sobre este fondo).
+::ng-deep .agendamiento-contenedor .mat-step-header[aria-selected='true'] {
+  background-color: #{tema.$color-highlight-success};
+  border-radius: 0.25rem;
+}
+
+// ------------------------------------------------------------
+// Tablet (641px – 1024px): el stepper se mantiene horizontal, pero cada
+// step pasa de fila (número + texto lado a lado) a columna (número
+// arriba, texto centrado debajo), para que el nombre del paso no se
+// corte ni quede en 2 líneas por falta de espacio horizontal.
+// ------------------------------------------------------------
+@media (min-width: 641px) and (max-width: 1024px) {
+  ::ng-deep .agendamiento-contenedor {
+    .mat-horizontal-stepper-header-container {
+      align-items: flex-start;
+    }
+
+    .mat-horizontal-stepper-header {
+      flex-direction: column;
+      flex-shrink: 0;
+      height: auto;
+      padding: 0.75rem 0.5rem;
+
+      .mat-step-icon {
+        margin-right: 0;
+        margin-bottom: 0.5rem;
+      }
+
+      .mat-step-label {
+        text-align: center;
+      }
+    }
+
+    // Alinea la línea conectora con el centro vertical del número de paso
+    // (padding-top del header + la mitad de la altura del ícono).
+    .mat-stepper-horizontal-line {
+      margin-top: 1.5rem;
+    }
+  }
+}
+
+// ------------------------------------------------------------
+// Mobile (< 640px): el stepper pasa a orientación vertical nativa
+// (ver [orientation] en agenda.component.html), que ya se comporta como
+// acordeón. Se reduce el indentado propio de esa variante para no restar
+// tanto ancho útil en pantallas de 360px–430px.
+// ------------------------------------------------------------
+@media (max-width: 639.98px) {
+  ::ng-deep .agendamiento-contenedor {
+    .mat-vertical-content-container {
+      margin-left: 1.25rem;
+    }
+
+    .mat-vertical-content {
+      padding: 0 0.5rem 1.25rem 0.5rem;
+    }
+  }
+}

@@ -1,0 +1,9 @@
+@use '../../styles/lineamientos-udea' as lineamientos;
+
+:host {
+  display: block;
+}
+
+h2[mat-dialog-title] {
+  @include lineamientos.udea-encabezado-seccion;
+}

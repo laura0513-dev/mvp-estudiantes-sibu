@@ -1,0 +1,29 @@
+@use '../../styles/custom-theme' as tema;
+
+.boton-cancelar-cita {
+  margin-top: 0.5rem;
+
+  // Aumenta la visibilidad del botón: Angular Material no tiñe el borde de
+  // un mat-stroked-button según su color="warn" (usa el "divider" gris
+  // neutro del tema en cualquier color), solo el texto queda en naranja
+  // oscuro. Se iguala el borde a ese mismo tono ($color-warn-texto, ya
+  // verificado en custom-theme.scss: 5.34:1 sobre blanco, cumple el 3:1 de
+  // un borde/componente no textual) y se engrosa el trazo. El ícono y el
+  // texto "Cancelar cita" ya existentes se mantienen sin cambios: el color
+  // no es el único indicador de que es una acción de cancelación.
+  &.mat-stroked-button {
+    border-width: 0.125rem;
+    border-color: #{tema.$color-warn-texto};
+  }
+}
+
+.cancelar-cita-agotado-mensaje {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  // $color-warn no cumple 4.5:1 usado como texto (ver custom-theme.scss);
+  // $color-warn-texto es el tono corregido que sí cumple.
+  color: tema.$color-warn-texto;
+  font-size: 0.875rem;
+  margin-top: 0.75rem;
+}
